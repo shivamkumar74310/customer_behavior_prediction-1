@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Behavior Prediction</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="frame">
+        <h1>Customer Behavior Prediction</h1>
+        <form id="predictionForm" >
+            <label for="customerName">Enter Customer Name:</label>
+            <input type="text" name="customerName" placeholder="Customer Name" required>
+
+            <label for="customerAge">Enter Customer Age:</label>
+            <input type="number" name="customerAge" placeholder="Customer Age" required>
+
+            <label class="gender-label">Select Customer Gender:</label>
+            <select name="customerGender" required>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+            </select>
+
+            <label for="customerJob">Enter Customer Job:</label>
+            <input type="text" name="customerJob" placeholder="Customer Job" required>
+
+            <label for="customerAddress">Enter Customer Address:</label>
+            <input type="text" name="customerAddress" placeholder="Customer Address" required>
+
+            <label for="customerIncome">Enter Customer Income (Yearly basis):</label>
+            <input type="number" name="customerIncome" placeholder="Customer Income" required>
+
+            <button type="button" onclick="predict()">Predict</button>
+        </form>
+        <div id="resultContainer" class="prediction-container" style="display: none;">
+            <h2>Prediction Result:</h2>
+            <p>
+                <strong>Name:</strong> <span id="resultName"></span><br>
+                <strong>Age:</strong> <span id="resultAge"></span> years<br>
+                <strong>Gender:</strong> <span id="resultGender"></span><br>
+                <strong>Job:</strong> <span id="resultJob"></span><br>
+                <strong>Address:</strong> <span id="resultAddress"></span><br>
+                <strong>Income:</strong> <span id="resultIncome"></span><br>
+                <strong>Prediction:</strong> <span id="resultPrediction"></span></p>
+        </div>
+    </div>
+    <script>
+        function predict() {
+            const form = document.getElementById("predictionForm");
+            const formData = new FormData(form);
+            
+            fetch("predict.php", {
+                method: "POST",
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                
+                const resultContainer = document.getElementById("resultContainer");
+                const resultName = document.getElementById("resultName");
+                const resultAge = document.getElementById("resultAge");
+                const resultGender = document.getElementById("resultGender");
+                const resultJob = document.getElementById("resultJob");
+                const resultAddress = document.getElementById("resultAddress");
+                const resultIncome = document.getElementById("resultIncome");
+                const resultPrediction = document.getElementById("resultPrediction");
+
+                resultName.textContent = data.customerName;
+                resultAge.textContent = data.age;
+                resultGender.textContent = data.gender;
+                resultJob.textContent = data.job;
+                resultAddress.textContent = data.address;
+                resultIncome.textContent = data.income;
+                resultPrediction.textContent = data.prediction;
+
+                resultContainer.style.display = "block";
+            })
+            .catch(error => {
+                console.error("An error occurred:", error);
+            });
+        }
+    </script>
+</body>
+
+</html>
